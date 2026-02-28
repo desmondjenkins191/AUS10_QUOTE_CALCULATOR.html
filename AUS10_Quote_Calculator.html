@@ -1671,30 +1671,76 @@ const page5 = `
     <div style="font-size:9px;color:#bbb;">Page 5 of 5</div>
   </div>`;
 
-// ── Assemble and trigger print ─────────────────────────────
-  const container = document.createElement('div');
-  container.id = 'pdf-print-container';
-  container.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:9999;overflow-y:auto;padding:20px;';
+// ── Assemble and open in new tab for clean PDF saving ──────
+  const fonts = `<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Great+Vibes&display=swap" rel="stylesheet"/>`;
 
-  container.innerHTML = `
-    <div style="max-width:860px;margin:0 auto;">
-      <div id="pdf-print-toolbar" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding:0 4px;">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;color:#fff;">Quote Packet — ${clientName}</div>
-        <div style="display:flex;gap:10px;">
-          <button onclick="window.print()" style="background:#1A6B3C;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;cursor:pointer;letter-spacing:0.05em;">🖨 PRINT / SAVE PDF</button>
-          <button onclick="document.getElementById('pdf-print-container').remove();document.getElementById('pdf-btn').textContent='📄 Generate Full Quote Packet (PDF)';document.getElementById('pdf-btn').disabled=false;" style="background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);padding:10px 20px;border-radius:8px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;cursor:pointer;">✕ Close</button>
-        </div>
-      </div>
-      <div style="background:rgba(26,107,60,0.3);border:1px solid rgba(26,107,60,0.5);border-radius:8px;padding:10px 16px;margin-bottom:12px;text-align:center;font-size:13px;color:#fff;" id="pdf-print-toolbar-tip">
-        📱 <strong>iPhone tip:</strong> Tap PRINT → tap the <strong>Share icon</strong> (box with arrow) → tap <strong>"Save to Files"</strong> to save as PDF
-      </div>
-      <div style="display:flex;flex-direction:column;gap:8px;">
-        ${page1}${page2}${page3}${page4}${page5}
-      </div>
-      <div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,0.3);">iPhone: Tap PRINT → Share icon → "Save to Files" to save as PDF</div>
-    </div>`;
+  const printHTML = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AUS-10 Quote — ${clientName}</title>
+${fonts}
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #f0f0f0; font-family: 'Barlow', sans-serif; padding: 0; }
+.pdf-page {
+  width: 816px;
+  min-height: 1056px;
+  background: white;
+  margin: 0 auto 12px;
+  position: relative;
+  overflow: hidden;
+  page-break-after: always;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+.save-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  background: #0D1B2A;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 9999;
+  gap: 12px;
+}
+.save-bar-title { color: #fff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 16px; }
+.save-bar-tip { color: rgba(255,255,255,0.5); font-size: 12px; flex: 1; text-align: center; }
+.save-btn { background: #1A6B3C; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; letter-spacing: 0.05em; white-space: nowrap; }
+.pages { padding-top: 60px; padding-bottom: 40px; }
+@media print {
+  .save-bar { display: none !important; }
+  body { background: white !important; padding: 0 !important; }
+  .pdf-page { box-shadow: none !important; margin: 0 !important; width: 100% !important; }
+  .pages { padding: 0 !important; }
+}
+</style>
+</head>
+<body>
+<div class="save-bar">
+  <div class="save-bar-title">AUS-10 Quote — ${clientName}</div>
+  <div class="save-bar-tip">📱 Tap the Share icon → Save to Files</div>
+  <button class="save-btn" onclick="window.print()">🖨 Save as PDF</button>
+</div>
+<div class="pages">
+  ${page1}${page2}${page3}${page4}${page5}
+</div>
+</body>
+</html>`;
 
-  document.body.appendChild(container);
+  // Open in new tab
+  const newTab = window.open('', '_blank');
+  if (newTab) {
+    newTab.document.write(printHTML);
+    newTab.document.close();
+  } else {
+    // Fallback if popup blocked — use blob URL
+    const blob = new Blob([printHTML], {type: 'text/html'});
+    const url = URL.createObjectURL(blob);
+    window.location.href = url;
+  }
+
   btn.textContent = '📄 Generate Full Quote Packet (PDF)';
   btn.disabled = false;
 }

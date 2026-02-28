@@ -340,9 +340,21 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 
 /* ── PDF STYLES ──────────────────────────────────── */
 @media print {
-  body { background: white !important; padding: 0 !important; }
-  .topbar, .sticky-total, .content { display: none !important; }
-  #pdf-output { display: block !important; }
+  body { background: white !important; padding: 0 !important; margin: 0 !important; }
+  .topbar, .sticky-total, .content, body > *:not(#pdf-print-container) { display: none !important; }
+  #pdf-print-container { 
+    position: static !important; 
+    background: white !important; 
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+  #pdf-print-toolbar { display: none !important; }
+  .pdf-page { 
+    width: 100% !important; 
+    page-break-after: always !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+  }
 }
 #pdf-output { display: none; }
 .pdf-page {
@@ -1119,73 +1131,147 @@ function generatePDF() {
     <div style="height:4px;background:linear-gradient(90deg,#0D1B2A 0%,#1A6B3C 50%,#0D1B2A 100%);"></div>
   </div>`;
   const page2 = `
-  <div class="pdf-page" style="background:#0D1B2A;">
-    <div style="padding:48px 60px 0;">
-      <!-- Header -->
-      <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:40px;">
-        <div>
-          <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#2E9E5B;font-weight:700;margin-bottom:8px;">Premium Upgrade</div>
-          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:56px;color:#fff;letter-spacing:-2px;line-height:0.9;">VELVET<br><span style="color:#C8F542;">LUX</span></div>
-          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;color:rgba(255,255,255,0.5);letter-spacing:0.1em;margin-top:4px;">FINISH</div>
+  <div class="pdf-page" style="background:#F0F7F4;">
+
+  <div style="height:5px;background:linear-gradient(90deg,#0D1B2A,#1A6B3C,#0D1B2A);"></div>
+
+  <div style="padding:36px 56px 0;">
+
+    <!-- HERO -->
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;">
+      <div>
+        <div style="font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:#1A6B3C;font-weight:700;margin-bottom:8px;">AUS-10 Premium Service</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;line-height:0.88;letter-spacing:-2px;">
+          <span style="font-size:68px;color:#0D1B2A;display:block;">VELVET</span>
+          <span style="font-size:68px;color:#1A6B3C;display:block;">LUX</span>
+          <span style="font-size:22px;color:#8BAAA0;display:block;letter-spacing:0.2em;font-weight:600;margin-top:5px;">FINISH</span>
         </div>
-        <div style="text-align:right;max-width:260px;">
-          <div style="font-size:13px;color:rgba(255,255,255,0.6);line-height:1.6;">
-            Precision-crafted mudding and sanding for a <span style="color:#C8F542;font-weight:600;">seamless, glass-like surface</span> that elevates every room.
+      </div>
+      <div style="max-width:250px;padding-top:6px;">
+        <div style="font-size:13px;color:#3D6B5E;line-height:1.7;margin-bottom:16px;margin-left:24px;">
+          Most painters stop at paint.<br><strong style="color:#0D1B2A;">We start with the wall.</strong>
+        </div>
+        <div style="background:#fff;border:1.5px solid #B2D5C8;border-radius:10px;padding:14px 16px;box-shadow:0 2px 12px rgba(26,107,60,0.08);">
+          <div style="font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:#1A6B3C;font-weight:700;margin-bottom:7px;">The Velvet Lux Difference</div>
+          <div style="font-size:11px;color:#333;line-height:1.7;">
+            Precision mudding, skim-coating and sanding creates a <strong style="color:#1A6B3C;">glass-smooth canvas</strong> before a single drop of paint is applied — delivering a finish that photographs like a showroom and holds its beauty for years.
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Comparison Table -->
-      <table style="width:100%;border-collapse:collapse;">
-        <thead>
-          <tr>
-            <th style="padding:14px 20px;text-align:left;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.5);font-weight:700;background:rgba(255,255,255,0.04);border-radius:8px 0 0 0;width:50%;">Key Service Features</th>
-            <th style="padding:14px 20px;text-align:center;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.5);font-weight:700;background:rgba(255,255,255,0.04);width:25%;">Standard Finish</th>
-            <th style="padding:14px 20px;text-align:center;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:#0D1B2A;font-weight:800;background:#C8F542;border-radius:0 8px 0 0;width:25%;">Velvet Lux</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${[
-            ['Professional Paint Application','✓','✓'],
-            ['Spot-Free, Clean Process for Occupied Homes','✓','✓'],
-            ['Durable, High-Quality Finish','✓','✓'],
-            ['Precision-Crafted Mudding & Sanding','','✓'],
-            ['Seamless Glass-Like Surface','','✓'],
-            ['Luxurious Showroom-Quality Finish','','✓'],
-            ['Elevates Paint Vibrancy','','✓'],
-            ['Enhanced Durability & Cleanability','','✓'],
-          ].map((row,i) => `
-            <tr style="background:${i%2===0?'rgba(255,255,255,0.03)':'transparent'};">
-              <td style="padding:13px 20px;font-size:12px;color:rgba(255,255,255,0.8);border-bottom:1px solid rgba(255,255,255,0.06);">${row[0]}</td>
-              <td style="padding:13px 20px;text-align:center;font-size:14px;border-bottom:1px solid rgba(255,255,255,0.06);color:${row[1]?'rgba(255,255,255,0.5)':'rgba(255,255,255,0.1)'};">${row[1]||'—'}</td>
-              <td style="padding:13px 20px;text-align:center;font-size:14px;border-bottom:1px solid rgba(200,245,66,0.15);font-weight:700;color:${row[2]==='✓'?'#C8F542':'rgba(255,255,255,0.15)'};">${row[2]||'—'}</td>
-            </tr>`).join('')}
-        </tbody>
-      </table>
+    <!-- COMPARISON TABLE -->
+    <div style="font-size:8.5px;letter-spacing:0.18em;text-transform:uppercase;color:#6B9E8F;font-weight:700;margin-bottom:10px;">Side-by-Side Comparison</div>
+    <table style="width:100%;border-collapse:collapse;border-radius:10px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.07);">
+      <thead>
+        <tr>
+          <th style="padding:13px 18px;text-align:left;background:#E0EDE8;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;font-weight:700;color:#3D6B5E;width:46%;">Feature</th>
+          <!-- Standard — deliberately subdued -->
+          <th style="padding:13px 18px;text-align:center;background:#E8EDEB;width:27%;">
+            <div style="font-size:11px;font-weight:700;color:#8BAAA0;letter-spacing:0.04em;">Standard Finish</div>
+            <div style="font-size:9px;color:#A8C0BA;margin-top:2px;">Basic paint application</div>
+          </th>
+          <!-- Velvet Lux — bold, prominent -->
+          <th style="padding:13px 18px;text-align:center;background:#0D1B2A;width:27%;">
+            <div style="font-size:11px;font-weight:800;color:#fff;letter-spacing:0.04em;">Velvet Lux Finish</div>
+            <div style="font-size:9px;color:#2E9E5B;margin-top:2px;">AUS-10 premium</div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Shared rows -->
+        <tr style="border-bottom:1px solid #D8EAE4;">
+          <td style="padding:11px 18px;font-size:11px;color:#4A7A6C;background:#EBF5F0;">Professional paint application</td>
+          <td style="padding:11px 18px;text-align:center;background:#EBF5F0;font-size:14px;color:#8BAAA0;">✓</td>
+          <td style="padding:11px 18px;text-align:center;background:#1A2E3D;font-size:16px;color:#2E9E5B;font-weight:700;">✓</td>
+        </tr>
+        <tr style="border-bottom:1px solid #D8EAE4;">
+          <td style="padding:11px 18px;font-size:11px;color:#4A7A6C;background:#F0F7F4;">Spot-free process in occupied homes</td>
+          <td style="padding:11px 18px;text-align:center;background:#F0F7F4;font-size:14px;color:#8BAAA0;">✓</td>
+          <td style="padding:11px 18px;text-align:center;background:#162433;font-size:16px;color:#2E9E5B;font-weight:700;">✓</td>
+        </tr>
+        <tr style="border-bottom:1px solid #D8EAE4;">
+          <td style="padding:11px 18px;font-size:11px;color:#4A7A6C;background:#EBF5F0;">Durable, high-quality finish</td>
+          <td style="padding:11px 18px;text-align:center;background:#EBF5F0;font-size:14px;color:#8BAAA0;">✓</td>
+          <td style="padding:11px 18px;text-align:center;background:#1A2E3D;font-size:16px;color:#2E9E5B;font-weight:700;">✓</td>
+        </tr>
 
-      <!-- Bottom callout -->
-      <div style="margin-top:32px;background:rgba(200,245,66,0.08);border:1px solid rgba(200,245,66,0.3);border-radius:12px;padding:20px 28px;display:flex;align-items:center;justify-content:space-between;">
-        <div style="font-size:13px;color:rgba(255,255,255,0.7);max-width:480px;line-height:1.6;">
-          Velvet Lux is AUS-10's signature premium finish. Ask your estimator about upgrading your project for a <strong style="color:#C8F542;">showroom-quality result</strong> that lasts years longer than standard paint.
+        <!-- Divider row -->
+        <tr>
+          <td colspan="3" style="padding:7px 18px;background:#0D1B2A;">
+            <div style="font-size:8px;letter-spacing:0.2em;text-transform:uppercase;color:#2E9E5B;font-weight:700;">Exclusive to Velvet Lux ↓</div>
+          </td>
+        </tr>
+
+        <!-- Exclusive rows — stark contrast: faded left col, bold right -->
+        <tr style="border-bottom:1px solid #D8EAE4;">
+          <td style="padding:12px 18px;background:#EBF5F0;">
+            <div style="font-size:11.5px;color:#0D1B2A;font-weight:600;">Precision skim-coat over all wall surfaces</div>
+            <div style="font-size:9px;color:#8BAAA0;margin-top:2px;">Fills micro-imperfections invisible to the naked eye</div>
+          </td>
+          <td style="padding:12px 18px;text-align:center;background:#EBF5F0;">
+            <span style="font-size:20px;color:#C5D8D2;">✗</span>
+          </td>
+          <td style="padding:12px 18px;text-align:center;background:#1A2E3D;">
+            <span style="font-size:20px;color:#C8F542;font-weight:700;">✓</span>
+          </td>
+        </tr>
+        <tr style="border-bottom:1px solid #D8EAE4;">
+          <td style="padding:12px 18px;background:#F0F7F4;">
+            <div style="font-size:11.5px;color:#0D1B2A;font-weight:600;">150-grit full-surface sanding before paint</div>
+            <div style="font-size:9px;color:#8BAAA0;margin-top:2px;">Creates the glass-like canvas paint requires to shine</div>
+          </td>
+          <td style="padding:12px 18px;text-align:center;background:#F0F7F4;"><span style="font-size:20px;color:#C5D8D2;">✗</span></td>
+          <td style="padding:12px 18px;text-align:center;background:#162433;"><span style="font-size:20px;color:#C8F542;font-weight:700;">✓</span></td>
+        </tr>
+        <tr style="border-bottom:1px solid #D8EAE4;">
+          <td style="padding:12px 18px;background:#EBF5F0;">
+            <div style="font-size:11.5px;color:#0D1B2A;font-weight:600;">Showroom-quality, luminous final finish</div>
+            <div style="font-size:9px;color:#8BAAA0;margin-top:2px;">The look that stops guests mid-sentence</div>
+          </td>
+          <td style="padding:12px 18px;text-align:center;background:#EBF5F0;"><span style="font-size:20px;color:#C5D8D2;">✗</span></td>
+          <td style="padding:12px 18px;text-align:center;background:#1A2E3D;"><span style="font-size:20px;color:#C8F542;font-weight:700;">✓</span></td>
+        </tr>
+        <tr style="border-bottom:1px solid #D8EAE4;">
+          <td style="padding:12px 18px;background:#F0F7F4;">
+            <div style="font-size:11.5px;color:#0D1B2A;font-weight:600;">Enhanced paint vibrancy & color depth</div>
+            <div style="font-size:9px;color:#8BAAA0;margin-top:2px;">Smooth walls make colors appear richer and truer</div>
+          </td>
+          <td style="padding:12px 18px;text-align:center;background:#F0F7F4;"><span style="font-size:20px;color:#C5D8D2;">✗</span></td>
+          <td style="padding:12px 18px;text-align:center;background:#162433;"><span style="font-size:20px;color:#C8F542;font-weight:700;">✓</span></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 18px;background:#EBF5F0;">
+            <div style="font-size:11.5px;color:#0D1B2A;font-weight:600;">Superior durability — lasts 30–40% longer</div>
+            <div style="font-size:9px;color:#8BAAA0;margin-top:2px;">Fewer repaints. More value over time.</div>
+          </td>
+          <td style="padding:12px 18px;text-align:center;background:#EBF5F0;"><span style="font-size:20px;color:#C5D8D2;">✗</span></td>
+          <td style="padding:12px 18px;text-align:center;background:#1A2E3D;"><span style="font-size:20px;color:#C8F542;font-weight:700;">✓</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- CTA -->
+    <div style="margin-top:18px;display:flex;gap:12px;align-items:stretch;">
+      <div style="flex:1;background:#fff;border:1.5px solid #B2D5C8;border-radius:8px;padding:14px 18px;box-shadow:0 2px 8px rgba(26,107,60,0.06);">
+        <div style="font-size:11px;color:#3D5A53;line-height:1.75;">
+          <strong style="color:#0D1B2A;">Velvet Lux isn't an upsell — it's the standard we hold ourselves to.</strong> When the prep is right, the paint speaks for itself. This is the finish that makes a home feel truly complete.
         </div>
-        <div style="text-align:right;flex-shrink:0;margin-left:20px;">
-          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:14px;color:#C8F542;letter-spacing:0.1em;">FLAWLESS FINISH.</div>
-          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:14px;color:rgba(255,255,255,0.5);letter-spacing:0.1em;">EVERY TIME.</div>
-        </div>
+      </div>
+      <div style="width:150px;background:#0D1B2A;border-radius:8px;padding:16px;display:flex;flex-direction:column;justify-content:center;text-align:center;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:13px;color:#fff;letter-spacing:0.08em;line-height:1.5;">FLAWLESS<br>FINISH.<br><span style="color:#2E9E5B;">EVERY<br>TIME.</span></div>
       </div>
     </div>
 
-    <!-- Page footer -->
-    <div style="position:absolute;bottom:0;left:0;right:0;padding:14px 60px;border-top:1px solid rgba(255,255,255,0.06);display:flex;justify-content:space-between;align-items:center;">
-      <div style="font-size:9px;color:rgba(255,255,255,0.3);letter-spacing:0.1em;">AUS-10 PAINT, LLC. · (346) 336-9263</div>
-      <div style="font-size:9px;color:rgba(255,255,255,0.3);">Page 2 of 5</div>
-    </div>
-  </div>`;
+  </div>
 
-  // ══════════════════════════════════════════════
-  // PAGE 3 — PAINT GUIDE
-  // ══════════════════════════════════════════════
-  const finishes = [
+  <div style="margin-top:20px;padding:10px 56px;border-top:1px solid #D0E8DF;text-align:right;">
+    <div style="font-size:9px;color:#8BAAA0;">Page 2 of 5</div>
+  </div>
+  <div style="height:4px;background:linear-gradient(90deg,#0D1B2A,#1A6B3C,#0D1B2A);"></div>
+</div>`;
+
+const finishes = [
     { num:'1', name:'Flat / Matte', shine:'No shine', desc:'Smooth, velvety finish that absorbs light. Best for ceilings and low-traffic areas like bedrooms and living rooms.', rooms:'Bedrooms · Living Rooms · Ceilings', color:'#E8F5EE', accent:'#1A6B3C' },
     { num:'2', name:'Eggshell', shine:'Slight shine', desc:'Gentle, subtle appearance with a soft glow. Great for dining rooms and medium-traffic hallways.', rooms:'Dining Rooms · Hallways', color:'#EFF6FF', accent:'#2563EB' },
     { num:'3', name:'Satin', shine:'Moderate shine', desc:"Smooth, durable with good cleanability. Enhances colors in high-traffic areas. AUS-10's most popular choice.", rooms:"Family Rooms · Hallways · Kids' Rooms", color:'#FFF7ED', accent:'#EA580C', badge:'Most Popular' },
@@ -1205,34 +1291,145 @@ function generatePDF() {
   );
 
   const page3 = `
-  <div class="pdf-page" style="background:#fff;">
-    <div style="background:#0D1B2A;padding:28px 48px 24px;display:flex;align-items:center;justify-content:space-between;">
-      <div>
-        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:28px;color:#fff;letter-spacing:-0.5px;">AUS-10 PAINT GUIDE</div>
-        <div style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:#2E9E5B;font-weight:600;margin-top:4px;">Choosing the Right Finish for Every Room</div>
-      </div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;max-width:320px;">
-        ${['Bedroom','Living Room','Dining Room','Hallway','Kitchen','Bathroom','Trim'].map(r=>`<span style="background:rgba(26,107,60,0.2);color:#2E9E5B;font-size:9px;padding:3px 8px;border-radius:10px;font-weight:700;">${r}</span>`).join('')}
-      </div>
-    </div>
-    <div style="padding:28px 48px;">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
-        ${finishCards.slice(0,4).join('')}
-      </div>
-      <div style="max-width:calc(50% - 7px);">
-        ${finishCards[4]}
-      </div>
-    </div>
-    <div style="position:absolute;bottom:0;left:0;right:0;padding:14px 48px;background:#0D1B2A;display:flex;justify-content:space-between;align-items:center;">
-      <div style="font-size:9px;color:rgba(255,255,255,0.3);">AUS-10 PAINT, LLC. · Flawless Finish. Every Time.</div>
-      <div style="font-size:9px;color:rgba(255,255,255,0.3);">Page 3 of 5</div>
-    </div>
-  </div>`;
+  <div class="pdf-page" style="background:#FFFDF7;">
+  <div style="height:5px;background:linear-gradient(90deg,#92400E,#D97706,#F59E0B,#D97706,#92400E);"></div>
 
-  // ══════════════════════════════════════════════
-  // PAGE 4 — OUR PROCESS
-  // ══════════════════════════════════════════════
-  const steps = [
+  <div style="padding:24px 52px 18px;border-bottom:1px solid #FDE68A;display:flex;align-items:flex-end;justify-content:space-between;">
+    <div>
+      <div style="font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:#D97706;font-weight:700;margin-bottom:6px;">Client Reference Guide</div>
+      <!-- Libre Baskerville — clean serif, editorial, distinct from Playfair -->
+      <div style="font-family:'Libre Baskerville',serif;font-weight:700;font-size:26px;color:#1C1007;letter-spacing:-0.3px;line-height:1.1;">AUS-10 Paint Guide</div>
+      <div style="font-size:10.5px;color:#A16207;margin-top:5px;">Choosing the right finish makes all the difference.</div>
+    </div>
+    <div style="text-align:right;display:flex;flex-direction:column;gap:5px;align-items:flex-end;">
+      <div style="background:#FEF3C7;border:1px solid #FDE68A;border-radius:6px;padding:5px 12px;font-size:8.5px;font-weight:700;color:#92400E;letter-spacing:0.04em;white-space:nowrap;">SW Pro+ Member</div>
+      <div style="background:#FEF3C7;border:1px solid #FDE68A;border-radius:6px;padding:5px 12px;font-size:8.5px;font-weight:700;color:#92400E;letter-spacing:0.04em;white-space:nowrap;">ProColor Swatches</div>
+      <div style="background:#FEF3C7;border:1px solid #FDE68A;border-radius:6px;padding:5px 12px;font-size:8.5px;font-weight:700;color:#92400E;letter-spacing:0.04em;white-space:nowrap;">1-Year Warranty</div>
+    </div>
+  </div>
+
+  <div style="padding:18px 52px 0;">
+
+    <!-- Row 1 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:11px;">
+      <!-- 1. Flat -->
+      <div style="border:1.5px solid #FDE68A;border-radius:10px;overflow:hidden;">
+        <div style="background:#FEF3C7;padding:11px 15px 9px;display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:19px;color:#1C1007;">Flat / Matte</div>
+            <div style="font-size:8.5px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#D97706;margin-top:2px;">No Shine</div>
+          </div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:44px;color:#D97706;opacity:0.15;line-height:1;">1</div>
+        </div>
+        <div style="padding:9px 15px 11px;background:#fff;">
+          <div style="font-size:10px;color:#444;line-height:1.65;margin-bottom:8px;">Smooth, velvety finish that absorbs light. Best for calm, low-traffic spaces — the most forgiving finish for imperfect walls.</div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px;">
+            <span style="background:#FEF9C3;color:#92400E;font-size:8px;padding:2px 9px;border-radius:12px;font-weight:700;border:1px solid #FDE68A;">Bedroom</span>
+            <span style="background:#FEF9C3;color:#92400E;font-size:8px;padding:2px 9px;border-radius:12px;font-weight:700;border:1px solid #FDE68A;">Living Room</span>
+            <span style="background:#FEF9C3;color:#92400E;font-size:8px;padding:2px 9px;border-radius:12px;font-weight:700;border:1px solid #FDE68A;">Master Bedroom</span>
+            <span style="background:#FEF9C3;color:#92400E;font-size:8px;padding:2px 9px;border-radius:12px;font-weight:700;border:1px solid #FDE68A;">Ceilings</span>
+            <span style="background:#FEF9C3;color:#92400E;font-size:8px;padding:2px 9px;border-radius:12px;font-weight:700;border:1px solid #FDE68A;">Office</span>
+          </div>
+        </div>
+      </div>
+      <!-- 2. Eggshell -->
+      <div style="border:1.5px solid #BFDBFE;border-radius:10px;overflow:hidden;">
+        <div style="background:#EFF6FF;padding:11px 15px 9px;display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:19px;color:#1C1007;">Eggshell</div>
+            <div style="font-size:8.5px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#2563EB;margin-top:2px;">Slight Shine</div>
+          </div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:44px;color:#2563EB;opacity:0.15;line-height:1;">2</div>
+        </div>
+        <div style="padding:9px 15px 11px;background:#fff;">
+          <div style="font-size:10px;color:#444;line-height:1.65;margin-bottom:8px;">Subtle glow with improved washability over flat. A versatile mid-level choice for social spaces and medium-traffic areas.</div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px;">
+            <span style="background:#EFF6FF;color:#1D4ED8;font-size:8px;padding:2px 9px;border-radius:12px;font-weight:700;border:1px solid #BFDBFE;">Dining Room</span>
+            <span style="background:#EFF6FF;color:#1D4ED8;font-size:8px;padding:2px 9px;border-radius:12px;font-weight:700;border:1px solid #BFDBFE;">Hallway</span>
+            <span style="background:#EFF6FF;color:#1D4ED8;font-size:8px;padding:2px 9px;border-radius:12px;font-weight:700;border:1px solid #BFDBFE;">Guest Room</span>
+            <span style="background:#EFF6FF;color:#1D4ED8;font-size:8px;padding:2px 9px;border-radius:12px;font-weight:700;border:1px solid #BFDBFE;">Foyer</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:11px;">
+      <!-- 3. Satin -->
+      <div style="border:2px solid #EA580C;border-radius:10px;overflow:hidden;position:relative;">
+        <div style="position:absolute;top:9px;right:9px;background:#EA580C;color:#fff;font-size:7.5px;font-weight:800;letter-spacing:0.1em;padding:2px 9px;border-radius:10px;">MOST RECOMMENDED</div>
+        <div style="background:#FFF7ED;padding:11px 15px 9px;display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:19px;color:#1C1007;">Satin</div>
+            <div style="font-size:8.5px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#EA580C;margin-top:2px;">Moderate Shine</div>
+          </div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:44px;color:#EA580C;opacity:0.15;line-height:1;">3</div>
+        </div>
+        <div style="padding:9px 15px 11px;background:#fff;">
+          <div style="font-size:10px;color:#444;line-height:1.65;margin-bottom:8px;">The perfect balance of sheen and durability. Cleans easily, holds color beautifully. AUS-10's most-selected finish by a wide margin.</div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px;">
+            <span style="background:#FFF7ED;color:#C2410C;font-size:8px;padding:2px 9px;border-radius:12px;font-weight:700;border:1px solid #FED7AA;">Family Room</span>
+            <span style="background:#FFF7ED;color:#C2410C;font-size:8px;padding:2px 9px;border-radius:12px;font-weight:700;border:1px solid #FED7AA;">Hallway</span>
+            <span style="background:#FFF7ED;color:#C2410C;font-size:8px;padding:2px 9px;border-radius:12px;font-weight:700;border:1px solid #FED7AA;">Kids' Room</span>
+            <span style="background:#FFF7ED;color:#C2410C;font-size:8px;padding:2px 9px;border-radius:12px;font-weight:700;border:1px solid #FED7AA;">Playroom</span>
+            <span style="background:#FFF7ED;color:#C2410C;font-size:8px;padding:2px 9px;border-radius:12px;font-weight:700;border:1px solid #FED7AA;">Stairwell</span>
+          </div>
+        </div>
+      </div>
+      <!-- 4. Semi-Gloss -->
+      <div style="border:1.5px solid #DDD6FE;border-radius:10px;overflow:hidden;">
+        <div style="background:#F5F3FF;padding:11px 15px 9px;display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:19px;color:#1C1007;">Semi-Gloss</div>
+            <div style="font-size:8.5px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#7C3AED;margin-top:2px;">High Shine</div>
+          </div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:44px;color:#7C3AED;opacity:0.15;line-height:1;">4</div>
+        </div>
+        <div style="padding:9px 15px 11px;background:#fff;">
+          <div style="font-size:10px;color:#444;line-height:1.65;margin-bottom:8px;">Moisture-resistant and highly washable. The go-to for wet zones and any surface that sees frequent contact or cleaning.</div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px;">
+            <span style="background:#F5F3FF;color:#6D28D9;font-size:8px;padding:2px 9px;border-radius:12px;font-weight:700;border:1px solid #DDD6FE;">Kitchen</span>
+            <span style="background:#F5F3FF;color:#6D28D9;font-size:8px;padding:2px 9px;border-radius:12px;font-weight:700;border:1px solid #DDD6FE;">Bathroom</span>
+            <span style="background:#F5F3FF;color:#6D28D9;font-size:8px;padding:2px 9px;border-radius:12px;font-weight:700;border:1px solid #DDD6FE;">Laundry Room</span>
+            <span style="background:#F5F3FF;color:#6D28D9;font-size:8px;padding:2px 9px;border-radius:12px;font-weight:700;border:1px solid #DDD6FE;">Trim</span>
+            <span style="background:#F5F3FF;color:#6D28D9;font-size:8px;padding:2px 9px;border-radius:12px;font-weight:700;border:1px solid #DDD6FE;">Baseboards</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 3 — High Gloss half width -->
+    <div style="max-width:calc(50% - 5.5px);">
+      <div style="border:1.5px solid #FECDD3;border-radius:10px;overflow:hidden;">
+        <div style="background:#FFF1F2;padding:11px 15px 9px;display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:19px;color:#1C1007;">High-Gloss</div>
+            <div style="font-size:8.5px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#BE123C;margin-top:2px;">Mirror-Like Shine</div>
+          </div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:44px;color:#BE123C;opacity:0.15;line-height:1;">5</div>
+        </div>
+        <div style="padding:9px 15px 11px;background:#fff;">
+          <div style="font-size:10px;color:#444;line-height:1.65;margin-bottom:8px;">Bold, mirror-like finish. Dramatic and modern — reserved for accents and high-impact surfaces.</div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px;">
+            <span style="background:#FFF1F2;color:#9F1239;font-size:8px;padding:2px 9px;border-radius:12px;font-weight:700;border:1px solid #FECDD3;">Trim</span>
+            <span style="background:#FFF1F2;color:#9F1239;font-size:8px;padding:2px 9px;border-radius:12px;font-weight:700;border:1px solid #FECDD3;">Baseboards</span>
+            <span style="background:#FFF1F2;color:#9F1239;font-size:8px;padding:2px 9px;border-radius:12px;font-weight:700;border:1px solid #FECDD3;">Cabinets</span>
+            <span style="background:#FFF1F2;color:#9F1239;font-size:8px;padding:2px 9px;border-radius:12px;font-weight:700;border:1px solid #FECDD3;">Doors</span>
+            <span style="background:#FFF1F2;color:#9F1239;font-size:8px;padding:2px 9px;border-radius:12px;font-weight:700;border:1px solid #FECDD3;">Accent Walls</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="margin-top:16px;padding:10px 52px;background:#FEF3C7;border-top:1px solid #FDE68A;text-align:right;">
+    <div style="font-size:9px;color:#92400E;">Page 3 of 5</div>
+  </div>
+  <div style="height:4px;background:linear-gradient(90deg,#92400E,#F59E0B,#D97706,#F59E0B,#92400E);"></div>
+</div>`;
+
+const steps = [
     { num:'01', title:'PRE-JOB', color:'#1A6B3C', bg:'#E8F5EE', icon:'📋', items:['Confirm paint color preference','Assess wall condition — drywall, texture, materials','Site visit to evaluate space and discuss details'] },
     { num:'02', title:'PREP', color:'#0D1B2A', bg:'#EFF6FF', icon:'🛡️', items:['Clean walls & ceiling, install plastic protection, tape trim','Fill large cracks with compound to even surfaces','Skim-coat entire wall/ceiling with joint compound','Sand with 150-grit paper for a clean, smooth finish'] },
     { num:'03', title:'PAINT', color:'#EA580C', bg:'#FFF7ED', icon:'🎨', items:['Apply primer and two coats with professional rollers','Allow full drying time between each coat','Use brushes for precision edge and trim painting','Provide client with real-time project status updates'] },
@@ -1254,114 +1451,247 @@ function generatePDF() {
     </div>`).join('');
 
   const page4 = `
-  <div class="pdf-page" style="background:#fff;">
-    <div style="background:#0D1B2A;padding:28px 48px 24px;">
-      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:28px;color:#fff;letter-spacing:-0.5px;">AUS-10'S PROCESS</div>
-      <div style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:#2E9E5B;font-weight:600;margin-top:4px;">How We Deliver a Flawless Finish Every Time</div>
+  <div class="pdf-page" style="background:#0A1520;">
+  <div style="height:5px;background:linear-gradient(90deg,#1A6B3C,#C8F542,#1A6B3C);"></div>
+
+  <div style="padding:26px 52px 18px;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:flex-end;justify-content:space-between;">
+    <div>
+      <div style="font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:#C8F542;font-weight:700;margin-bottom:5px;">How We Work</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:32px;color:#fff;letter-spacing:-1px;line-height:1;">AUS-10'S PROCESS</div>
+      <div style="font-size:10.5px;color:rgba(255,255,255,0.35);margin-top:4px;">Every step. Every time. No shortcuts.</div>
     </div>
-    <div style="padding:28px 48px;">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-        ${stepCards}
+    <div style="background:rgba(200,245,66,0.1);border:1px solid rgba(200,245,66,0.25);border-radius:6px;padding:8px 14px;text-align:right;">
+      <div style="font-size:8.5px;letter-spacing:0.12em;text-transform:uppercase;color:#C8F542;font-weight:700;">Backed by</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:15px;color:#fff;margin-top:1px;">1-Year Warranty</div>
+    </div>
+  </div>
+
+  <div style="padding:22px 52px 0;">
+
+    <!-- VISUAL FLOW ROW -->
+    <div style="display:flex;align-items:flex-start;gap:0;margin-bottom:20px;">
+
+      <!-- Step 1 -->
+      <div style="flex:1;text-align:center;">
+        <div style="width:50px;height:50px;background:#1A6B3C;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;border:3px solid #C8F542;">
+          <span style="font-size:20px;">📋</span>
+        </div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:10px;letter-spacing:0.18em;color:#C8F542;margin-bottom:2px;">01</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:16px;color:#fff;">PRE-JOB</div>
       </div>
 
-      <!-- Quality promise bar -->
-      <div style="margin-top:20px;background:#0D1B2A;border-radius:12px;padding:18px 28px;display:flex;align-items:center;justify-content:space-between;">
-        <div style="font-size:12px;color:rgba(255,255,255,0.7);max-width:500px;line-height:1.6;">
-          Every AUS-10 job is backed by a <strong style="color:#C8F542;">one-year workmanship warranty</strong>. If it's not perfect, we come back and make it right — at no cost to you.
+      <div style="width:28px;flex-shrink:0;padding-top:23px;">
+        <div style="height:2px;background:rgba(200,245,66,0.25);width:100%;"></div>
+      </div>
+
+      <!-- Step 2 -->
+      <div style="flex:1;text-align:center;">
+        <div style="width:50px;height:50px;background:#1A6B3C;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;border:3px solid #C8F542;">
+          <span style="font-size:20px;">🛡️</span>
         </div>
-        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:13px;color:#C8F542;text-align:right;letter-spacing:0.05em;flex-shrink:0;margin-left:20px;">FLAWLESS FINISH.<br><span style="color:rgba(255,255,255,0.4);">EVERY TIME.</span></div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:10px;letter-spacing:0.18em;color:#C8F542;margin-bottom:2px;">02</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:16px;color:#fff;">PREP</div>
+      </div>
+
+      <div style="width:28px;flex-shrink:0;padding-top:23px;">
+        <div style="height:2px;background:rgba(200,245,66,0.25);width:100%;"></div>
+      </div>
+
+      <!-- Step 3 -->
+      <div style="flex:1;text-align:center;">
+        <div style="width:50px;height:50px;background:#1A6B3C;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;border:3px solid #C8F542;">
+          <span style="font-size:20px;">🎨</span>
+        </div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:10px;letter-spacing:0.18em;color:#C8F542;margin-bottom:2px;">03</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:16px;color:#fff;">PAINT</div>
+      </div>
+
+      <div style="width:28px;flex-shrink:0;padding-top:23px;">
+        <div style="height:2px;background:rgba(200,245,66,0.25);width:100%;"></div>
+      </div>
+
+      <!-- Step 4 -->
+      <div style="flex:1;text-align:center;">
+        <div style="width:50px;height:50px;background:#C8F542;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;border:3px solid #fff;">
+          <span style="font-size:20px;">✅</span>
+        </div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:10px;letter-spacing:0.18em;color:#C8F542;margin-bottom:2px;">04</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:16px;color:#fff;">TOUCH-UP</div>
+      </div>
+
+    </div>
+
+    <!-- DETAIL CARDS — streamlined, no repetition from flow labels -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:18px;">
+
+      <div style="background:rgba(26,107,60,0.12);border:1px solid rgba(26,107,60,0.25);border-radius:8px;padding:12px;">
+        <div style="font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:#2E9E5B;font-weight:700;margin-bottom:8px;">Pre-Job Details</div>
+        <ul style="list-style:none;padding:0;margin:0;">
+          <li style="font-size:9.5px;color:rgba(255,255,255,0.6);padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.05);">Color & sheen selection</li>
+          <li style="font-size:9.5px;color:rgba(255,255,255,0.6);padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.05);">Wall material assessment</li>
+          <li style="font-size:9.5px;color:rgba(255,255,255,0.6);padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.05);">Scope walkthrough on site</li>
+          <li style="font-size:9.5px;color:rgba(255,255,255,0.6);padding:3px 0;">Schedule & timeline confirmed</li>
+        </ul>
+      </div>
+
+      <div style="background:rgba(26,107,60,0.12);border:1px solid rgba(26,107,60,0.25);border-radius:8px;padding:12px;">
+        <div style="font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:#2E9E5B;font-weight:700;margin-bottom:8px;">Prep Details</div>
+        <ul style="list-style:none;padding:0;margin:0;">
+          <li style="font-size:9.5px;color:rgba(255,255,255,0.6);padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.05);">Furniture protection & tape-off</li>
+          <li style="font-size:9.5px;color:rgba(255,255,255,0.6);padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.05);">Compound fill & skim-coat</li>
+          <li style="font-size:9.5px;color:rgba(255,255,255,0.6);padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.05);">Full 150-grit sand pass</li>
+          <li style="font-size:9.5px;color:rgba(255,255,255,0.6);padding:3px 0;">Primer coat applied</li>
+        </ul>
+      </div>
+
+      <div style="background:rgba(26,107,60,0.12);border:1px solid rgba(26,107,60,0.25);border-radius:8px;padding:12px;">
+        <div style="font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:#2E9E5B;font-weight:700;margin-bottom:8px;">Paint Details</div>
+        <ul style="list-style:none;padding:0;margin:0;">
+          <li style="font-size:9.5px;color:rgba(255,255,255,0.6);padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.05);">2-coat roller application</li>
+          <li style="font-size:9.5px;color:rgba(255,255,255,0.6);padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.05);">Full dry time between coats</li>
+          <li style="font-size:9.5px;color:rgba(255,255,255,0.6);padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.05);">Precision brush cut-in</li>
+          <li style="font-size:9.5px;color:rgba(255,255,255,0.6);padding:3px 0;">Daily status updates sent</li>
+        </ul>
+      </div>
+
+      <div style="background:rgba(200,245,66,0.08);border:1px solid rgba(200,245,66,0.2);border-radius:8px;padding:12px;">
+        <div style="font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:#C8F542;font-weight:700;margin-bottom:8px;">Touch-Up Details</div>
+        <ul style="list-style:none;padding:0;margin:0;">
+          <li style="font-size:9.5px;color:rgba(255,255,255,0.6);padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.05);">All plastic & tape removed</li>
+          <li style="font-size:9.5px;color:rgba(255,255,255,0.6);padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.05);">Caulk & final detailing</li>
+          <li style="font-size:9.5px;color:rgba(255,255,255,0.6);padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.05);">Client walk-through & sign-off</li>
+          <li style="font-size:9.5px;color:rgba(255,255,255,0.6);padding:3px 0;">1-year warranty issued</li>
+        </ul>
       </div>
     </div>
-    <div style="position:absolute;bottom:0;left:0;right:0;padding:14px 48px;background:#0D1B2A;display:flex;justify-content:space-between;align-items:center;">
-      <div style="font-size:9px;color:rgba(255,255,255,0.3);">AUS-10 PAINT, LLC. · (346) 336-9263 · 2810 Riverby Rd, Houston TX 77020</div>
-      <div style="font-size:9px;color:rgba(255,255,255,0.3);">Page 4 of 5</div>
+
+    <!-- WARRANTY BANNER -->
+    <div style="background:rgba(200,245,66,0.07);border:1px solid rgba(200,245,66,0.18);border-radius:8px;padding:13px 18px;display:flex;align-items:center;justify-content:space-between;">
+      <div style="font-size:11px;color:rgba(255,255,255,0.6);line-height:1.65;max-width:530px;">
+        Every AUS-10 job is backed by a <strong style="color:#C8F542;">one-year workmanship warranty</strong>. If it's not right after we leave, we come back and make it right — at no cost to you, no questions asked.
+      </div>
+      <div style="flex-shrink:0;margin-left:20px;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:12px;color:#C8F542;text-align:right;letter-spacing:0.08em;line-height:1.4;">FLAWLESS FINISH.<br><span style="color:rgba(255,255,255,0.22);">EVERY TIME.</span></div>
     </div>
+
+  </div>
+
+  <div style="margin-top:16px;padding:10px 52px;border-top:1px solid rgba(255,255,255,0.07);text-align:right;">
+    <div style="font-size:9px;color:rgba(255,255,255,0.22);">Page 4 of 5</div>
+  </div>
+  <div style="height:4px;background:linear-gradient(90deg,#1A6B3C,#C8F542,#1A6B3C);"></div>
+</div>`;
+
+const page5 = `
+  <div class="pdf-page" style="background:#fff;">
+  <div style="height:5px;background:linear-gradient(90deg,#0D1B2A 0%,#1A6B3C 50%,#0D1B2A 100%);"></div>
+
+  <div style="padding:24px 52px 20px;border-bottom:1px solid #e0e4e0;display:flex;align-items:flex-start;justify-content:space-between;">
+    <div>
+      <div style="font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:#1A6B3C;font-weight:700;margin-bottom:5px;">Proof of Coverage</div>
+      <div style="font-family:'Playfair Display',serif;font-weight:700;font-size:24px;color:#0D1B2A;letter-spacing:-0.3px;line-height:1.1;">Certificate of Liability Insurance</div>
+      <div style="font-size:10px;color:#777;margin-top:5px;">AUS-10 Paint, LLC. · Policy #219355417</div>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:#999;font-weight:700;margin-bottom:3px;">Insured Entity</div>
+      <div style="font-size:12px;font-weight:700;color:#0D1B2A;">AUS-10 Paint, LLC.</div>
+      <div style="font-size:10px;color:#666;margin-top:2px;">2810 Riverby Rd, Houston, TX 77020</div>
+      <div style="font-size:10px;color:#666;">(346) 336-9263</div>
+    </div>
+  </div>
+
+  <div style="padding:20px 52px 0;">
+
+    <!-- COVERAGE CARDS — font size reduced to fit cleanly -->
+    <div style="font-size:8.5px;letter-spacing:0.18em;text-transform:uppercase;color:#1A6B3C;font-weight:700;margin-bottom:10px;">Coverage Summary</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px;align-items:stretch;">
+
+      <div style="border:1.5px solid #BBF7D0;border-radius:10px;overflow:hidden;display:flex;flex-direction:column;">
+        <div style="background:#DCFCE7;padding:11px 14px 10px;">
+          <div style="font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#166534;margin-bottom:4px;">Commercial General Liability Insurance</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;color:#14532D;line-height:1;">$1,000,000</div>
+        </div>
+        <div style="padding:9px 14px 10px;background:#fff;flex:1;">
+          <div style="font-size:9.5px;color:#555;line-height:1.65;">Per occurrence<br>Aggregate: $1,000,000</div>
+        </div>
+      </div>
+
+      <div style="border:1.5px solid #BFDBFE;border-radius:10px;overflow:hidden;display:flex;flex-direction:column;">
+        <div style="background:#DBEAFE;padding:11px 14px 10px;">
+          <div style="font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#1E40AF;margin-bottom:4px;">Products & Completed Operations</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;color:#1E3A8A;line-height:1;">$1,000,000</div>
+        </div>
+        <div style="padding:9px 14px 10px;background:#fff;flex:1;">
+          <div style="font-size:9.5px;color:#555;line-height:1.65;">Aggregate coverage<br>Completed work claims</div>
+        </div>
+      </div>
+
+      <div style="border:1.5px solid #DDD6FE;border-radius:10px;overflow:hidden;display:flex;flex-direction:column;">
+        <div style="background:#EDE9FE;padding:11px 14px 10px;">
+          <div style="font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#5B21B6;margin-bottom:4px;">Contractors Errors & Omissions</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;color:#4C1D95;line-height:1;">$20,000</div>
+        </div>
+        <div style="padding:9px 14px 10px;background:#fff;flex:1;">
+          <div style="font-size:9.5px;color:#555;line-height:1.65;">Aggregate<br>$10,000 per occurrence</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- POLICY TABLE -->
+    <div style="font-size:8.5px;letter-spacing:0.18em;text-transform:uppercase;color:#1A6B3C;font-weight:700;margin-bottom:10px;">Policy Details</div>
+    <table style="width:100%;border-collapse:collapse;border:1px solid #e0e4e0;overflow:hidden;margin-bottom:18px;">
+      <thead>
+        <tr style="background:#0D1B2A;">
+          <th style="padding:9px 15px;text-align:left;font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.5);font-weight:700;width:32%;">Field</th>
+          <th style="padding:9px 15px;text-align:left;font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.5);font-weight:700;">Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background:#f8faf8;"><td style="padding:9px 15px;font-size:10px;font-weight:700;color:#555;border-bottom:1px solid #e0e4e0;">Insured</td><td style="padding:9px 15px;font-size:10px;color:#0D1B2A;border-bottom:1px solid #e0e4e0;">AUS-10 Paint, LLC. · 2810 Riverby Rd, Houston, TX 77020</td></tr>
+        <tr><td style="padding:9px 15px;font-size:10px;font-weight:700;color:#555;border-bottom:1px solid #e0e4e0;">Insurer</td><td style="padding:9px 15px;font-size:10px;color:#0D1B2A;border-bottom:1px solid #e0e4e0;">Next Insurance US Company · NAIC #16285</td></tr>
+        <tr style="background:#f8faf8;"><td style="padding:9px 15px;font-size:10px;font-weight:700;color:#555;border-bottom:1px solid #e0e4e0;">Certificate Number</td><td style="padding:9px 15px;font-size:10px;color:#0D1B2A;border-bottom:1px solid #e0e4e0;">219355417</td></tr>
+        <tr><td style="padding:9px 15px;font-size:10px;font-weight:700;color:#555;border-bottom:1px solid #e0e4e0;">Policy Number</td><td style="padding:9px 15px;font-size:10px;color:#0D1B2A;border-bottom:1px solid #e0e4e0;">NXTJHWKLR7-00-GL</td></tr>
+        <tr style="background:#f8faf8;"><td style="padding:9px 15px;font-size:10px;font-weight:700;color:#555;border-bottom:1px solid #e0e4e0;">Policy Period</td><td style="padding:9px 15px;font-size:10px;color:#0D1B2A;border-bottom:1px solid #e0e4e0;">July 7, 2025 — July 7, 2026</td></tr>
+        <tr><td style="padding:9px 15px;font-size:10px;font-weight:700;color:#555;border-bottom:1px solid #e0e4e0;">Coverage Type</td><td style="padding:9px 15px;font-size:10px;color:#0D1B2A;border-bottom:1px solid #e0e4e0;">Commercial General Liability — Occurrence Based</td></tr>
+        <tr style="background:#f8faf8;"><td style="padding:9px 15px;font-size:10px;font-weight:700;color:#555;">Med Exp / Personal & Adv Injury</td><td style="padding:9px 15px;font-size:10px;color:#0D1B2A;">$10,000 per person · $1,000,000 personal & advertising injury</td></tr>
+      </tbody>
+    </table>
+
+    <!-- LIVE COI BANNER -->
+    <div style="background:#E8F5EE;border:1.5px solid #1A6B3C;border-radius:8px;padding:13px 18px;display:flex;align-items:center;gap:14px;">
+      <div style="width:34px;height:34px;background:#1A6B3C;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🔐</div>
+      <div>
+        <div style="font-size:11px;font-weight:700;color:#1A6B3C;margin-bottom:2px;">Live Certificate Available on Request</div>
+        <div style="font-size:10px;color:#333;line-height:1.6;">A scannable live COI is available for your project files or GC compliance portal. Contact <strong>Desmond Jenkins</strong> at <strong>(346) 336-9263</strong> or request via email.</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:18px;padding:10px 52px;border-top:1px solid #e0e4e0;text-align:right;">
+    <div style="font-size:9px;color:#bbb;">Page 5 of 5</div>
   </div>`;
 
-  // ══════════════════════════════════════════════
-  // PAGE 5 — COI REFERENCE
-  // ══════════════════════════════════════════════
-  const page5 = `
-  <div class="pdf-page" style="background:#fff;">
-    <div style="background:#0D1B2A;padding:28px 48px 24px;">
-      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:28px;color:#fff;letter-spacing:-0.5px;">CERTIFICATE OF LIABILITY INSURANCE</div>
-      <div style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:#2E9E5B;font-weight:600;margin-top:4px;">AUS-10 Paint, LLC. · Policy #${COI_INFO.policyNum}</div>
-    </div>
-    <div style="padding:32px 48px;">
-      <!-- Coverage cards -->
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px;">
-        ${[
-          ['Commercial General Liability','$1,000,000 per occurrence · $1,000,000 aggregate','#E8F5EE','#1A6B3C'],
-          ['Products & Completed Operations','$1,000,000 aggregate coverage','#EFF6FF','#2563EB'],
-          ['Contractors Errors & Omissions','$10,000 each · $20,000 aggregate','#F5F3FF','#7C3AED'],
-        ].map(([title,val,bg,color]) => `
-          <div style="background:${bg};border:1.5px solid ${color}22;border-radius:12px;padding:16px;">
-            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:${color};margin-bottom:6px;">${title}</div>
-            <div style="font-size:12px;font-weight:700;color:#0D1B2A;line-height:1.5;">${val}</div>
-          </div>`).join('')}
-      </div>
-
-      <!-- Policy details table -->
-      <table style="width:100%;border-collapse:collapse;border:1px solid #e8ede8;border-radius:8px;overflow:hidden;margin-bottom:24px;">
-        <thead>
-          <tr style="background:#0D1B2A;">
-            <th style="padding:10px 16px;text-align:left;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.6);font-weight:700;">Field</th>
-            <th style="padding:10px 16px;text-align:left;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.6);font-weight:700;">Details</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${[
-            ['Insured','AUS-10 Paint, LLC. · 2810 Riverby Rd, Houston, TX 77020'],
-            ['Insurer','Next Insurance US Company (NAIC #16285)'],
-            ['Certificate Number','219355417'],
-            ['Policy Number','NXTJHWKLR7-00-GL'],
-            ['Policy Effective','July 7, 2025'],
-            ['Policy Expiration','July 7, 2026'],
-            ['Coverage Type','Commercial General Liability — Occurrence'],
-            ['Personal & Adv Injury','$1,000,000'],
-            ['Damage to Rented Premises','$100,000 per occurrence'],
-            ['Med Exp (Any one person)','$10,000'],
-          ].map(([field,val],i) => `
-            <tr style="background:${i%2===0?'#f7f8f5':'#fff'};">
-              <td style="padding:10px 16px;font-size:11px;font-weight:700;color:#555;border-bottom:1px solid #e8ede8;width:40%;">${field}</td>
-              <td style="padding:10px 16px;font-size:12px;color:#0D1B2A;border-bottom:1px solid #e8ede8;">${val}</td>
-            </tr>`).join('')}
-        </tbody>
-      </table>
-
-      <!-- Live certificate note -->
-      <div style="background:#E8F5EE;border:1.5px solid #1A6B3C;border-radius:10px;padding:16px 20px;display:flex;align-items:center;gap:16px;">
-        <div style="font-size:28px;">🔐</div>
-        <div>
-          <div style="font-size:12px;font-weight:700;color:#1A6B3C;margin-bottom:3px;">Live Certificate Available on Request</div>
-          <div style="font-size:11px;color:#333;line-height:1.5;">A live, scannable certificate of insurance is available upon request for your project files. Contact Desmond Jenkins at <strong>(346) 336-9263</strong> or request via your general contractor's compliance portal.</div>
-        </div>
-      </div>
-    </div>
-    <div style="position:absolute;bottom:0;left:0;right:0;padding:14px 48px;background:#0D1B2A;display:flex;justify-content:space-between;align-items:center;">
-      <div style="font-size:9px;color:rgba(255,255,255,0.3);">AUS-10 PAINT, LLC. · Insured via Next Insurance · Certificate #219355417</div>
-      <div style="font-size:9px;color:rgba(255,255,255,0.3);">Page 5 of 5</div>
-    </div>
-  </div>`;
-
-  // ── Assemble and trigger print ─────────────────────────────
+// ── Assemble and trigger print ─────────────────────────────
   const container = document.createElement('div');
   container.id = 'pdf-print-container';
   container.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:9999;overflow-y:auto;padding:20px;';
 
   container.innerHTML = `
     <div style="max-width:860px;margin:0 auto;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding:0 4px;">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;color:#fff;">Quote Packet Preview — ${clientName}</div>
+      <div id="pdf-print-toolbar" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding:0 4px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;color:#fff;">Quote Packet — ${clientName}</div>
         <div style="display:flex;gap:10px;">
           <button onclick="window.print()" style="background:#1A6B3C;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;cursor:pointer;letter-spacing:0.05em;">🖨 PRINT / SAVE PDF</button>
           <button onclick="document.getElementById('pdf-print-container').remove();document.getElementById('pdf-btn').textContent='📄 Generate Full Quote Packet (PDF)';document.getElementById('pdf-btn').disabled=false;" style="background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);padding:10px 20px;border-radius:8px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;cursor:pointer;">✕ Close</button>
         </div>
       </div>
+      <div style="background:rgba(26,107,60,0.3);border:1px solid rgba(26,107,60,0.5);border-radius:8px;padding:10px 16px;margin-bottom:12px;text-align:center;font-size:13px;color:#fff;" id="pdf-print-toolbar-tip">
+        📱 <strong>iPhone tip:</strong> Tap PRINT → tap the <strong>Share icon</strong> (box with arrow) → tap <strong>"Save to Files"</strong> to save as PDF
+      </div>
       <div style="display:flex;flex-direction:column;gap:8px;">
         ${page1}${page2}${page3}${page4}${page5}
       </div>
-      <div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,0.3);">Tap "Print / Save PDF" → choose "Save as PDF" in the print dialog</div>
+      <div style="text-align:center;padding:20px;font-size:11px;color:rgba(255,255,255,0.3);">iPhone: Tap PRINT → Share icon → "Save to Files" to save as PDF</div>
     </div>`;
 
   document.body.appendChild(container);

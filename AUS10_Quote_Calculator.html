@@ -1683,6 +1683,7 @@ const page5 = `
 ${fonts}
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; }
 body { background: #f0f0f0; font-family: 'Barlow', sans-serif; padding: 0; }
 .pdf-page {
   width: 816px;
@@ -1693,6 +1694,12 @@ body { background: #f0f0f0; font-family: 'Barlow', sans-serif; padding: 0; }
   overflow: hidden;
   page-break-after: always;
   box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  transform-origin: top center;
+}
+.pages-wrapper {
+  overflow-x: auto;
+  padding-top: 60px;
+  padding-bottom: 40px;
 }
 .save-bar {
   position: fixed;
@@ -1708,14 +1715,33 @@ body { background: #f0f0f0; font-family: 'Barlow', sans-serif; padding: 0; }
 .save-bar-title { color: #fff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 16px; }
 .save-bar-tip { color: rgba(255,255,255,0.5); font-size: 12px; flex: 1; text-align: center; }
 .save-btn { background: #1A6B3C; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; letter-spacing: 0.05em; white-space: nowrap; }
-.pages { padding-top: 60px; padding-bottom: 40px; }
 @media print {
   .save-bar { display: none !important; }
   body { background: white !important; padding: 0 !important; }
-  .pdf-page { box-shadow: none !important; margin: 0 !important; width: 100% !important; }
-  .pages { padding: 0 !important; }
+  .pdf-page { 
+    box-shadow: none !important; 
+    margin: 0 !important; 
+    width: 100% !important;
+    min-height: 0 !important;
+    page-break-after: always !important;
+    transform: none !important;
+  }
+  .pages-wrapper { padding: 0 !important; overflow: visible !important; }
 }
-</style>
+<\/style>
+<script>
+function scalePages() {
+  const pages = document.querySelectorAll('.pdf-page');
+  const w = window.innerWidth;
+  const scale = Math.min(1, (w - 20) / 816);
+  pages.forEach(p => {
+    p.style.transform = 'scale(' + scale + ')';
+    p.style.marginBottom = ((1056 * scale) - 1056 + 12) + 'px';
+  });
+}
+window.addEventListener('load', scalePages);
+window.addEventListener('resize', scalePages);
+<\/script>
 </head>
 <body>
 <div class="save-bar">
@@ -1723,9 +1749,9 @@ body { background: #f0f0f0; font-family: 'Barlow', sans-serif; padding: 0; }
   <div class="save-bar-tip">📱 Tap the Share icon → Save to Files</div>
   <button class="save-btn" onclick="window.print()">🖨 Save as PDF</button>
 </div>
-<div class="pages">
+<div class="pages-wrapper"><div class="pages">
   ${page1}${page2}${page3}${page4}${page5}
-</div>
+</div></div>
 </body>
 </html>`;
 
